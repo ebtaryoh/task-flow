@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { TodoCard } from './components/TodoCard';
 import './App.css';
 
-/* ── Logo mark SVG ── */
 function CheckSquareIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -12,7 +11,6 @@ function CheckSquareIcon() {
   );
 }
 
-/* ── Sample data ── */
 const INITIAL_TODOS = [
   {
     id: '1',
@@ -52,7 +50,6 @@ const INITIAL_TODOS = [
   },
 ];
 
-/* ── App ── */
 export default function App() {
   const [todos, setTodos] = useState(INITIAL_TODOS);
 
@@ -68,20 +65,15 @@ export default function App() {
     );
   };
 
-  /* Stats */
-  const total    = todos.length;
-  const pending  = todos.filter((t) => t.status === 'pending').length;
-  const inProg   = todos.filter((t) => t.status === 'in-progress').length;
-  const done     = todos.filter((t) => t.status === 'done').length;
+  const total  = todos.length;
+  const pending = todos.filter((t) => t.status === 'pending').length;
+  const inProg  = todos.filter((t) => t.status === 'in-progress').length;
+  const done    = todos.filter((t) => t.status === 'done').length;
 
   return (
     <div className="app-wrapper">
-
-      {/* ── Header ── */}
       <header className="app-header" role="banner">
         <div className="header-inner">
-
-          {/* Logo */}
           <div className="header-logo" aria-label="TaskFlow app">
             <div className="logo-mark" aria-hidden="true">
               <CheckSquareIcon />
@@ -94,7 +86,6 @@ export default function App() {
             Track priorities, deadlines and progress — all in one place.
           </p>
 
-          {/* Stats pills */}
           <div className="stats-bar" role="group" aria-label="Task statistics">
             <div className="stat-pill stat-pill-total" aria-label={`${total} total tasks`}>
               <span className="stat-dot dot-total" aria-hidden="true" />
@@ -116,7 +107,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* ── Main ── */}
       <main className="app-main" id="main-content">
         <p className="section-label" aria-hidden="true">Tasks</p>
 
@@ -140,7 +130,6 @@ export default function App() {
           </div>
         )}
       </main>
-
     </div>
   );
 }

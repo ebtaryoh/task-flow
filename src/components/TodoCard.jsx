@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import '../styles/TodoCard.css';
 
-/* ── Helpers ─────────────────────────────────────────── */
-
 function getTimeRemaining(date) {
   const diffMs   = date.getTime() - Date.now();
   const diffMins = Math.round(diffMs / 60_000);
@@ -20,12 +18,12 @@ function getTimeRemaining(date) {
     return { text: `Overdue by ${m} min${m !== 1 ? 's' : ''}`, urgency: 'overdue' };
   }
   if (diffMins === 0) return { text: 'Due now!', urgency: 'critical' };
-  if (diffMins < 360)  return { text: `Due in ${diffMins} min${diffMins !== 1 ? 's' : ''}`,         urgency: 'critical' };
+  if (diffMins < 360)  return { text: `Due in ${diffMins} min${diffMins !== 1 ? 's' : ''}`, urgency: 'critical' };
   if (diffMins < 1440) {
     const h = Math.ceil(diffMins / 60);
     return { text: `Due in ${h} hour${h !== 1 ? 's' : ''}`, urgency: 'soon' };
   }
-  if (diffMins < 2880) return { text: 'Due tomorrow',   urgency: 'soon' };
+  if (diffMins < 2880) return { text: 'Due tomorrow', urgency: 'soon' };
   const d = Math.ceil(diffMins / 1440);
   return { text: `Due in ${d} day${d !== 1 ? 's' : ''}`, urgency: 'future' };
 }
@@ -33,8 +31,6 @@ function getTimeRemaining(date) {
 function formatDueDate(date) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
-
-/* ── Icons (inline SVG) ──────────────────────────────── */
 
 function IconEdit() {
   return (
@@ -76,8 +72,6 @@ function IconClock() {
   );
 }
 
-/* ── Priority & Status config ────────────────────────── */
-
 const PRIORITY_CONFIG = {
   high:   { label: 'High',   dotClass: 'dot-high',   badgeClass: 'badge-priority-high',   accentClass: 'accent-high'   },
   medium: { label: 'Medium', dotClass: 'dot-medium', badgeClass: 'badge-priority-medium', accentClass: 'accent-medium' },
@@ -85,9 +79,9 @@ const PRIORITY_CONFIG = {
 };
 
 const STATUS_CONFIG = {
-  pending:     { label: 'Pending',     badgeClass: 'badge-status-pending'     },
-  'in-progress': { label: 'In Progress', badgeClass: 'badge-status-inprogress'  },
-  done:        { label: 'Done',        badgeClass: 'badge-status-done'        },
+  pending:       { label: 'Pending',     badgeClass: 'badge-status-pending'    },
+  'in-progress': { label: 'In Progress', badgeClass: 'badge-status-inprogress' },
+  done:          { label: 'Done',        badgeClass: 'badge-status-done'       },
 };
 
 const URGENCY_CLASS = {
@@ -97,31 +91,28 @@ const URGENCY_CLASS = {
   future:   'time-future',
 };
 
-/* ── Component ───────────────────────────────────────── */
-
 export function TodoCard({
-  id          = '1',
-  title       = 'Complete project documentation',
-  description = 'Write comprehensive documentation for the new API endpoints and update the README file with clear examples and usage guidelines.',
-  priority    = 'high',
-  dueDate     = new Date(2026, 2, 1, 18, 0, 0),
-  status      = 'in-progress',
-  tags        = ['work', 'urgent', 'design'],
-  onEdit      = () => console.log('Edit clicked'),
-  onDelete    = () => console.log('Delete clicked'),
+  id             = '1',
+  title          = 'Complete project documentation',
+  description    = 'Write comprehensive documentation for the new API endpoints and update the README file with clear examples and usage guidelines.',
+  priority       = 'high',
+  dueDate        = new Date(2026, 2, 1, 18, 0, 0),
+  status         = 'in-progress',
+  tags           = ['work', 'urgent', 'design'],
+  onEdit         = () => console.log('Edit clicked'),
+  onDelete       = () => console.log('Delete clicked'),
   onStatusToggle = () => {},
 }) {
-  const [isCompleted,    setIsCompleted]    = useState(status === 'done');
-  const [currentStatus,  setCurrentStatus]  = useState(status);
-  const [timeData,       setTimeData]       = useState(() => getTimeRemaining(dueDate));
+  const [isCompleted,   setIsCompleted]   = useState(status === 'done');
+  const [currentStatus, setCurrentStatus] = useState(status);
+  const [timeData,      setTimeData]      = useState(() => getTimeRemaining(dueDate));
 
-  // Refresh time remaining every 60 s
   const refreshTime = useCallback(() => setTimeData(getTimeRemaining(dueDate)), [dueDate]);
 
   useEffect(() => {
     refreshTime();
-    const id = setInterval(refreshTime, 60_000);
-    return () => clearInterval(id);
+    const timer = setInterval(refreshTime, 60_000);
+    return () => clearInterval(timer);
   }, [refreshTime]);
 
   const handleToggle = () => {
@@ -140,11 +131,7 @@ export function TodoCard({
       data-testid="test-todo-card"
       aria-label={`Task: ${title}`}
     >
-
-      {/* ── Top bar: checkbox + title + actions ── */}
       <div className="card-header">
-
-        {/* Custom checkbox */}
         <div className="checkbox-wrapper">
           <input
             type="checkbox"
@@ -162,14 +149,10 @@ export function TodoCard({
           </label>
         </div>
 
-        <h2
-          className="todo-title"
-          data-testid="test-todo-title"
-        >
+        <h2 className="todo-title" data-testid="test-todo-title">
           {title}
         </h2>
 
-        {/* Action buttons — always present, visually revealed on hover */}
         <div className="card-actions" role="group" aria-label="Task actions">
           <button
             className="action-btn edit-btn"
@@ -192,12 +175,10 @@ export function TodoCard({
         </div>
       </div>
 
-      {/* ── Description ── */}
       <p className="todo-description" data-testid="test-todo-description">
         {description}
       </p>
 
-      {/* ── Badges row ── */}
       <div className="badges-row">
         <span
           className={`badge priority-badge ${pCfg.badgeClass}`}
@@ -217,7 +198,6 @@ export function TodoCard({
         </span>
       </div>
 
-      {/* ── Dates row ── */}
       <div className="dates-row">
         <time
           className="meta-chip"
@@ -239,7 +219,6 @@ export function TodoCard({
         </span>
       </div>
 
-      {/* ── Tags ── */}
       <div className="tags-section">
         <ul
           className="tags-list"
@@ -249,17 +228,13 @@ export function TodoCard({
         >
           {tags.map((tag) => (
             <li key={tag}>
-              <span
-                className="tag-chip"
-                data-testid={`test-todo-tag-${tag}`}
-              >
+              <span className="tag-chip" data-testid={`test-todo-tag-${tag}`}>
                 #{tag}
               </span>
             </li>
           ))}
         </ul>
       </div>
-
     </article>
   );
 }
